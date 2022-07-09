@@ -1,31 +1,38 @@
-import React, { useEffect, useState } from "react";
-import useAPI from "../../Services/APIs/Common/useAPI";
-import persons from "../../Services/APIs/Persons/Persons";
+import React, { useRef, useState } from "react";
 import HomeView from "./HomeView";
 
-export default function HomeController() {
-  const [count, setCount] = useState(0);
-  const getPersonsGetAPI = useAPI(persons.getPersons);
-  const getPersonsPostAPI = useAPI(persons.getPersonsPost);
+const HomeController = () => {
+  const [count, setCount] = useState<number>(0);
+  const [statusPlay, setStatusPlay] = useState<number>(0);
+  const timer = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      //functional update
+  const onStart = () => {
+    timer.current = setInterval(() => {
+      setStatusPlay(1);
       setCount((count) => count + 1);
-    }, 3000);
+    }, 1000);
+  };
 
-    getPersonsGetAPI.request(1);
-    getPersonsPostAPI.request({
-      title: "L",
-    });
+  const onPause = () => {
+    setStatusPlay(2);
+    clearInterval(timer.current as NodeJS.Timeout);
+  };
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, []);
+  const onStop = () => {
+    setCount(0);
+    setStatusPlay(0);
+    clearInterval(timer.current as NodeJS.Timeout);
+  };
 
-  // console.log(getPersonsGetAPI.data);
-  // console.log(getPersonsPostAPI.data);
+  return (
+    <HomeView
+      count={count}
+      statusPlay={statusPlay}
+      onStart={onStart}
+      onPause={onPause}
+      onStop={onStop}
+    />
+  );
+};
 
-  return <HomeView info={count} person={getPersonsGetAPI.data} />;
-}
+export default HomeController;

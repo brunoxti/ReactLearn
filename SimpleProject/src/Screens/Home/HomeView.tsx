@@ -1,35 +1,91 @@
-import * as React from "react";
-import Grid from "@mui/material/Grid";
-import { AllPersons } from "../../Models/Person";
-import { Title, Main } from "./HomeStyle";
+import { FC, ReactElement } from "react";
+import { Button, ButtonProps, Grid, Stack } from "@mui/material";
+import { MainContainer } from "./HomeStyle";
+import Typography from "@mui/material/Typography";
 
-interface IProps {
-  info: number;
-  person: AllPersons | null;
-}
+type IProps = {
+  count: number;
+  statusPlay: number;
+  onStart: Function;
+  onPause: Function;
+  onStop: Function;
+};
 
-const HomeView: React.FC<IProps> = ({ info, person }) => {
-  let name = "";
-  if (person) {
-    name = person.persons[0].firstName + " " + person.persons[0].lastName;
-  }  
+const HomeView: FC<IProps> = ({
+  count,
+  statusPlay,
+  onStart,
+  onPause,
+  onStop,
+}) => {
+  let buttons: ReactElement<ButtonProps>[] = [];
+
+  console.log(statusPlay);
+  if (statusPlay === 0) {
+    buttons.push(
+      <Button
+        key={1}
+        variant="outlined"
+        color="error"
+        onClick={() => onStart()}
+      >
+        Iniciar
+      </Button>
+    );
+  } else if (statusPlay === 1) {
+    buttons.push(
+      <Button
+        key={2}
+        variant="outlined"
+        color="error"
+        onClick={() => onPause()}
+      >
+        Pausar
+      </Button>
+    );
+    buttons.push(
+      <Button key={3} variant="outlined" color="error" onClick={() => onStop()}>        
+        Parar
+      </Button>
+    );
+  } else {
+    buttons.push(
+      <Button
+        key={1}
+        variant="outlined"
+        color="error"
+        onClick={() => onStart()}
+      >
+        Despausar
+      </Button>
+    );
+    buttons.push(
+      <Button key={2} variant="outlined" color="error" onClick={() => onStop()}>
+        Parar
+      </Button>
+    );
+  }
   return (
-    <Main>
+    <MainContainer>
       <Grid
         container
-        spacing={0}
+        spacing={2}
         direction="column"
         justifyContent="center"
         alignItems="center"
       >
-        <Title gutterBottom variant="h1" color="primary.dark">
-          Person {name}
-        </Title>
-        <Title gutterBottom variant="h1" color="secondary.dark">
-          Info {info}
-        </Title>
+        <Grid item>
+          <Typography gutterBottom variant="h1" color="primary.dark">
+            Count {count}
+          </Typography>
+        </Grid>
+        <Grid item xs>
+          <Stack direction="row" spacing={10}>
+            {buttons}
+          </Stack>
+        </Grid>
       </Grid>
-    </Main>
+    </MainContainer>
   );
 };
 
