@@ -1,5 +1,7 @@
-import { useState } from "react";
-import UserInfoContext from "./UserInfoContext";
+import { useReducer } from "react";
+import { UserInfo } from "../../Models/UserInfo";
+import UserInfoContext, { ActionProps } from "./UserInfoContext";
+import UserInfoReducer from "./UserInfoReducer";
 
 type Props = {
   children: JSX.Element;
@@ -7,19 +9,25 @@ type Props = {
 
 const UserInfoContextProvider: React.FC<Props> = ({ children }) => {
 
-  const [email, setEmail] = useState<string>("")
-  const [userName, setUserName] = useState<string>("")
-  
+
+  const [state, dispatch] = useReducer(UserInfoReducer, {
+    userName: "",
+    email: "",
+  });
+
   const userInfoValue = {
-    userInfo: { 
-      userName: userName,
-      email: email
-    },
+    userInfo: state,
     changeUserName: (userName: string) => {
-      setUserName(userName)
+      dispatch({
+        type: "CHANGE_USER_NAME",
+        payload: userName,
+      });
     },
     changeEmail: (email: string) => {
-      setEmail(email)
+      dispatch({
+        type: "CHANGE_EMAIL",
+        payload: email,
+      });
     },
   };
 
