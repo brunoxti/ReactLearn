@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 import Router from "./Routes/Routes";
 import MuiThemes from "./Utils/Common/MuiThemes";
-
+import UserInfoContextProvider from './Store/UserInfo/UserInfoProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -14,7 +14,9 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <MuiThemes>
-        <Router />
+        <UserInfoContextProvider>
+          <Router />
+        </UserInfoContextProvider>
       </MuiThemes>
     </BrowserRouter>
     ,
